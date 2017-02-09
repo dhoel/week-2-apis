@@ -11,7 +11,7 @@ function renderVids(state){
     // 1. create <li> elements from state.vids
     var listElements = state.vids.map(function(vid) {
       return "<li id=" + vid.id.videoId + "> <img src='" +
-       vid.snippet.thumbnails.default.url + "'></li>";
+       vid.snippet.thumbnails.medium.url + "'></li>";
     });
     //console.log(listElements);
     // 2. insert <li> elements into <ul> on dom
@@ -29,7 +29,7 @@ function getDataFromApi(searchTerm, callback) {
     key: state.key,
     type: 'video',
     part: 'snippet',
-    maxResults: 10
+    maxResults: 12
   }
   $.getJSON(state.YOUTUBE_BASE_URL, query, callback);
 }
