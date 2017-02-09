@@ -7,64 +7,38 @@ var state = {
     ]
 }
 
+function renderVids(state){
+    // 1. create <li> elements from state.vids
+    var listElements = state.vids.map(function(vid) {
+      return "<li id=" + vid.id.videoId + "> <img src='" +
+       vid.snippet.thumbnails.default.url + "'></li>";
+    });
+    //console.log(listElements);
+    // 2. insert <li> elements into <ul> on dom
+    $('.js-search-results').html(listElements);
+}
+
 function addVids(state, items){
   state.vids = items;
+  //console.log(state.vids);
 }
 
 function getDataFromApi(searchTerm, callback) {
   var query = {
     q: searchTerm,
     key: state.key,
+    type: 'video',
     part: 'snippet',
     maxResults: 10
   }
   $.getJSON(state.YOUTUBE_BASE_URL, query, callback);
 }
 
-
-// function displayYouTubeSearchData(data) {
-//   console.log(data);
-// }
-
-function renderVids(state){
-    // 1. create <li> elements from state.vids
-    console.log(state.vids);
-
-
-    var listElements = state.vids.map(function(vid) {
-      return "<li> <img src='" + vid.snippet.thumbnails.default.url + "'></li>";
-    });
-    console.log(listElements);
-
-
-    // 2. insert <li> elements into <ul> on dom
-    $('.js-search-results').html(listElements);
-}
-
 function displayYouTubeSearchData(data) {
-  console.log('func calleds');
   addVids(state, data.items);
   renderVids(state);
 }
 
-
-    //var temp = data.items.map(function())
-
-    //for (var i = 0; i < data.items.length; i++) {
-      //temp.thumbnailUrl = data.items[i].snippet.thumbnails.default.url;
-      //console.log(temp);
-      //state.vids.push(temp);
-      //console.log(state.vids);
-      //resultElement += '<img class = "thumbnail" src = ' + data.items[i].snippet.thumbnails.default.url + '>';
-//     }
-// }
-//   else {
-//     console.log('fail')
-//     // resultElement += '<p>No results</p>';
-//   }
-//   console.log(state.vids);
-//   //$('.js-search-results').html(resultElement);
-// }
 function initializeListners () {
 
   $('.js-search-form').submit(function(e) {
@@ -73,9 +47,12 @@ function initializeListners () {
     getDataFromApi(query, displayYouTubeSearchData);
   });
 
-
-  //  $('.js-search-results').on('click', '.thumbnail', function(event) {
-  //     data.items;
-  //  });
+  $('.js-search-results').on('click', 'li', function(e) {
+    var url = 'https://www.youtube.com/watch?v=' +
+    $(e.currentTarget).attr('id');
+    window.open(url, '_blank');
+    //console.log(vId);
+  });
 }
+
 $(function(){initializeListners();});
