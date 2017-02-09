@@ -3,8 +3,13 @@
 var state = {
     YOUTUBE_BASE_URL: 'https://www.googleapis.com/youtube/v3/search',
     key: 'AIzaSyDenH4fAGWR967TtP_ezbC8Hkj329kaCHc',
+    vids: [
+    ]
 }
 
+function addVids(state, items){
+  state.vids = items;
+}
 
 function getDataFromApi(searchTerm, callback) {
   var query = {
@@ -21,22 +26,45 @@ function getDataFromApi(searchTerm, callback) {
 //   console.log(data);
 // }
 
-function displayYouTubeSearchData(data) {
-  console.log(data);
-  var resultElement = '';
-  if (data.items) {
-    for (var i = 0; i < data.items.length; i++) {
-      //console.log(data.items[i].snippet.title);
-      resultElement += '<img class = "thumbnail" src = ' + data.items[i].snippet.thumbnails.default.url + '>';
-    }
-}
-  else {
-    console.log('fail')
-    // resultElement += '<p>No results</p>';
-  }
+function renderVids(state){
+    // 1. create <li> elements from state.vids
+    console.log(state.vids);
 
-  $('.js-search-results').html(resultElement);
+
+    var listElements = state.vids.map(function(vid) {
+      return "<li> <img src='" + vid.snippet.thumbnails.default.url + "'></li>";
+    });
+    console.log(listElements);
+
+
+    // 2. insert <li> elements into <ul> on dom
+    $('.js-search-results').html(listElements);
 }
+
+function displayYouTubeSearchData(data) {
+  console.log('func calleds');
+  addVids(state, data.items);
+  renderVids(state);
+}
+
+
+    //var temp = data.items.map(function())
+
+    //for (var i = 0; i < data.items.length; i++) {
+      //temp.thumbnailUrl = data.items[i].snippet.thumbnails.default.url;
+      //console.log(temp);
+      //state.vids.push(temp);
+      //console.log(state.vids);
+      //resultElement += '<img class = "thumbnail" src = ' + data.items[i].snippet.thumbnails.default.url + '>';
+//     }
+// }
+//   else {
+//     console.log('fail')
+//     // resultElement += '<p>No results</p>';
+//   }
+//   console.log(state.vids);
+//   //$('.js-search-results').html(resultElement);
+// }
 function initializeListners () {
 
   $('.js-search-form').submit(function(e) {
